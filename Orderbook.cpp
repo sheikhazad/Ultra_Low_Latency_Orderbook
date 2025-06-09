@@ -18,7 +18,7 @@
 #include <iostream>
 #include <functional>
 #include <chrono>
-#include <unordered_map>
+#include <unordered_map> //Can use tsl::robin_map for faster processing
 
 // Platform detection
 #if defined(_WIN32) || defined(_WIN64)
