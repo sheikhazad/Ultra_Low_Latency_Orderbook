@@ -111,7 +111,7 @@ public:
         }
 #endif
         if (!ptr) throw std::bad_alloc();
-        return static_cast<pointer>(ptr);
+        return static_cast<T*>(ptr);
     }
 
     void deallocate(T* p, size_type) noexcept {
