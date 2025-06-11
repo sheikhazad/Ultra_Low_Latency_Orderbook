@@ -97,16 +97,16 @@ public:
      * @return Pointer to allocated memory
      * @throws std::bad_alloc on failure
      */
-    T* allocate(size_type n) {
-        if (n > std::numeric_limits<size_type>::max() / sizeof(value_type)) {
+    T* allocate(std::size_t n) {
+        if (n > std::numeric_limits<std::size_t>::max() / sizeof(T)) {
             throw std::bad_alloc();
         }
 
         void* ptr;
 #if defined(_MSC_VER)
-        ptr = _aligned_malloc(n * sizeof(value_type), Alignment);
+        ptr = _aligned_malloc(n * sizeof(T), Alignment);
 #else
-        if (posix_memalign(&ptr, Alignment, n * sizeof(value_type))) {
+        if (posix_memalign(&ptr, Alignment, n * sizeof(T))) {
             throw std::bad_alloc();
         }
 #endif
@@ -114,7 +114,7 @@ public:
         return static_cast<T*>(ptr);
     }
 
-    void deallocate(T* p, size_type) noexcept {
+    void deallocate(T* p, std::size_t) noexcept {
 #if defined(_MSC_VER)
         _aligned_free(p);
 #else
@@ -214,8 +214,9 @@ private:
     alignas(CACHE_LINE_SIZE) std::unordered_map<OrderId, std::unique_ptr<Order>> orders_map_;
     
     // Bid/ask levels (sorted vectors for cache locality)
-    alignas(CACHE_LINE_SIZE) AlignedVector<Level> bids_;
-    alignas(CACHE_LINE_SIZE) AlignedVector<Level> asks_;
+    // Aligned vectors (Remove alignas, allocator handles it)
+    /*alignas(CACHE_LINE_SIZE)*/AlignedVector<Level> bids_;
+    AlignedVector<Level> asks_;
 
     /**
      * Generates monotonic order IDs
