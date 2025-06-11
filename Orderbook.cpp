@@ -97,7 +97,7 @@ public:
      * @return Pointer to allocated memory
      * @throws std::bad_alloc on failure
      */
-    pointer allocate(size_type n) {
+    T* allocate(size_type n) {
         if (n > std::numeric_limits<size_type>::max() / sizeof(value_type)) {
             throw std::bad_alloc();
         }
@@ -114,7 +114,7 @@ public:
         return static_cast<pointer>(ptr);
     }
 
-    void deallocate(pointer p, size_type) noexcept {
+    void deallocate(T* p, size_type) noexcept {
 #if defined(_MSC_VER)
         _aligned_free(p);
 #else
